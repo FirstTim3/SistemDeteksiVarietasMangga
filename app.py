@@ -1,5 +1,4 @@
 import PIL
-import cv2
 import streamlit as st
 import numpy as np
 
@@ -126,3 +125,4 @@ if st.button('Deteksi Objek'):
     else:
 
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
+
