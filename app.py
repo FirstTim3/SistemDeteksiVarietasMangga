@@ -19,7 +19,7 @@ def is_image_file_valid(src_img):
 
 # Load Model
 try:
-    model = YOLO("models/prediction/best.pt")
+    model = YOLO("best.pt")
 except:
     st.error("Gagal mengakses model.")
 
@@ -124,4 +124,5 @@ if st.button('Deteksi Objek'):
         # Mereset state
         st.session_state["trigger_predict"] = False
     else:
+
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
