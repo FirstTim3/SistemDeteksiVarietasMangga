@@ -73,7 +73,7 @@ confidence = st.slider(
     "Select Model Confidence",
     min_value=0.1,
     max_value=1.0,
-    value=0.4,
+    value=0.5,
     step=0.01
 )
 
@@ -125,4 +125,5 @@ if st.button('Deteksi Objek'):
     else:
 
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
+
 
