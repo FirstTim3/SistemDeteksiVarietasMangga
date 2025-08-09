@@ -77,7 +77,6 @@ confidence = st.slider(
     step=0.01
 )
 
-# if st.sidebar.button('Deteksi Objek'):
 if st.button('Deteksi Objek'):
     # Menyimpan state, agar prediksi hanya dilakukan saat tombol ditekan
     # Menghindari prediksi berulang-ulang saat slider diubah
@@ -125,5 +124,6 @@ if st.button('Deteksi Objek'):
     else:
 
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
+
 
 
