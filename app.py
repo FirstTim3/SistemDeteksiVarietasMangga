@@ -68,6 +68,8 @@ if source_img is not None and is_image_file_valid(source_img):
                     )
     except Exception as e:
         st.toast("Terjadi kesalahan saat membaca gambar.", icon="⚠️")
+    except NameError:
+        pass
 
 confidence = st.slider(
     "Select Model Confidence",
@@ -125,6 +127,7 @@ if st.button('Deteksi Objek'):
         st.session_state["trigger_predict"] = False
     else:
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
+
 
 
 
