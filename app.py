@@ -87,43 +87,45 @@ if st.button('Deteksi Objek'):
         # Melakukan pengecekan terhadap state dan menset ulang state jika belum diset
         if st.session_state.get("trigger_predict", False):
             # Melakukan prediksi
-            prediction = model.predict(
-                uploaded_img,
-                conf=confidence
-            )
-
-            # Mendapatkan data hasil deteksi
-            boxes = prediction[0].boxes
-
-            # Membuat bounding box, label dan confidence score pada gambar
-            # Melakukan konversi warna ke RGB
-            prediction_plotted = prediction[0].plot()[:, :, ::-1]
-        
-            # Menampilkan gambar hasil deteksi
-            # with col2:
-            st.image(
-                prediction_plotted,
-                caption="Hasil Deteksi",
-                use_container_width=True
-            )
-
-            # Menampilkan detail hasil deteksi
             try:
-                # Menampilkan jumlah objek terdeteksi
-                st.write(f'Jumlah Objek terdeteksi: {len(boxes)}')
+                prediction = model.predict(
+                    uploaded_img,
+                    conf=confidence
+                )
 
-                # Menampilkan bounding box objek terdeteksi
-                with st.expander("Hasil Deteksi (xywh)"):
-                    for box in boxes:
-                        st.write(box.xywh)
-            except Exception as e:
-                st.toast(e)
-    
+                # Mendapatkan data hasil deteksi
+                boxes = prediction[0].boxes
+
+                # Membuat bounding box, label dan confidence score pada gambar
+                # Melakukan konversi warna ke RGB
+                prediction_plotted = prediction[0].plot()[:, :, ::-1]
+                
+                # Menampilkan gambar hasil deteksi
+                # with col2:
+                st.image(
+                    prediction_plotted,
+                    caption="Hasil Deteksi",
+                    use_container_width=True
+                )
+                # Menampilkan detail hasil deteksi
+                try:
+                    # Menampilkan jumlah objek terdeteksi
+                    st.write(f'Jumlah Objek terdeteksi: {len(boxes)}')
+
+                    # Menampilkan bounding box objek terdeteksi
+                    with st.expander("Hasil Deteksi (xywh)"):
+                        for box in boxes:
+                            st.write(box.xywh)
+                except Exception as e:
+                    st.toast(e)
+            except NameError:
+                pass
+
         # Mereset state
         st.session_state["trigger_predict"] = False
     else:
-
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
+
 
 
 
