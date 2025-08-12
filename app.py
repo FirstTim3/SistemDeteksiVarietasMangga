@@ -115,7 +115,7 @@ if st.button('Deteksi Objek'):
                     st.write(f'Jumlah Objek terdeteksi: {len(boxes)}')
 
                     # Menampilkan bounding box objek terdeteksi
-                    with st.expander("Hasil Deteksi (xywh)"):
+                    with st.expander("Bounding Box (xywh)"):
                         for box in boxes:
                             st.write(box.xywh)
                 except Exception as e:
@@ -127,6 +127,7 @@ if st.button('Deteksi Objek'):
         st.session_state["trigger_predict"] = False
     else:
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
+
 
 
 
