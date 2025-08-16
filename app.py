@@ -161,6 +161,8 @@ if st.button("Deteksi Objek", type="primary", use_container_width=True):
                 st.session_state["has_result"]=True
             except Exception as e:
                 st.toast(e)
+        except ValueError:
+            st.toast("Error", icon="❌")
         except NameError:
             pass
     else:
