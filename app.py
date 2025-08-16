@@ -58,7 +58,7 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
 
 # Load Model
 try:
-    model = YOLO("models/prediction/best.pt")
+    model = YOLO("best.pt")
 except:
     st.error("Gagal mengakses model.")
 
