@@ -4,6 +4,12 @@ import numpy as np
 
 from ultralytics import YOLO
 
+# Insialisasi State
+if "file_uploader_key" not in st.session_state:
+    st.session_state["file_uploader_key"] = 0
+if "has_result" not in st.session_state:
+    st.session_state["has_result"] = False
+
 # Validasi gambar
 def is_image_file_valid(src_img):
     try:
@@ -18,7 +24,7 @@ def is_image_file_valid(src_img):
 
 # Gambar plot
 def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
-    # Ambil gambar asli (BGR -> RGB)
+    # Convert gambar asli (BGR -> RGB)
     img_rgb = result.orig_img[:, :, ::-1]  
     img_pil = PIL.Image.fromarray(img_rgb)
     draw = PIL.ImageDraw.Draw(img_pil)
@@ -35,22 +41,24 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
 
         # Gambar kotak
         draw.rectangle([x1, y1, x2, y2], outline=box_color, width=3)
-
+        
         # Latar teks
         text_size = draw.textbbox((0, 0), label, font=font)
         tw, th = text_size[2] - text_size[0], text_size[3] - text_size[1]
         
         pad = 4
-        text_bg = [x1, y2, x1 + tw + 2*pad, y2 + th + 2*pad]
+        tx = x1 + pad
+        ty = y1 + pad
+
+                    #X          #Y          #W         #H                
+        text_bg = [tx - pad, ty - pad, tx + tw + pad, ty + th + pad]
         draw.rectangle(text_bg, fill=box_color)
-        draw.text((x1, y1 - th), label, fill=text_color, font=font)
-
+        draw.text((tx, ty), label, fill=text_color, font=font)
     return img_pil
-
 
 # Load Model
 try:
-    model = YOLO("best.pt")
+    model = YOLO("models/prediction/best.pt")
 except:
     st.error("Gagal mengakses model.")
 
@@ -72,7 +80,8 @@ st.caption("File yang didukung: JPG/JPEG/PNG (MAX 200 MB)")
 source_img = st.file_uploader(
         label="Pilih Gambar", 
         type=("jpg", "jpeg", "png"),
-        help="Tarik & lepas gambar di area atau klik ‘Browse files’."
+        help="Tarik & lepas gambar di area atau klik ‘Browse files’.",
+        key=st.session_state["file_uploader_key"],
     )
 
 # Melakukan modifikasi pada tampilan file uploader
@@ -107,11 +116,11 @@ confidence = st.slider(
     "Select Model Confidence",
     min_value=0.1,
     max_value=1.0,
-    value=0.5,
+    value=0.50,
     step=0.01
 )
 
-if st.button('Deteksi Objek'):
+if st.button("Deteksi Objek", type="primary", use_container_width=True):
     # Menyimpan state, agar prediksi hanya dilakukan saat tombol ditekan
     # Menghindari prediksi berulang-ulang saat slider diubah
     st.session_state["trigger_predict"] = True
@@ -132,35 +141,40 @@ if st.button('Deteksi Objek'):
 
                 # Membuat bounding box, label dan confidence score pada gambar
                 prediction_plotted = draw_detection(prediction[0])
-                #prediction_plotted = prediction[0].plot()[:, :, ::-1]
                 
-                # Menampilkan gambar hasil deteksi
                 st.image(
-                    prediction_plotted,
+                    np.array(prediction_plotted),
                     caption="Hasil Deteksi",
                     use_container_width=True
                 )
+            
+                st.write(f'Jumlah Objek terdeteksi: {len(boxes)}')
+
                 # Menampilkan detail hasil deteksi
                 try:
-                    # Menampilkan jumlah objek terdeteksi
-                    st.write(f'Jumlah Objek terdeteksi: {len(boxes)}')
-
-                    # Menampilkan bounding box objek terdeteksi
-                    with st.expander("Bounding Box (xywh)"):
-                        for box in boxes:
-                            st.write(box.xywh)
+                    with st.expander("Hasil Deteksi (DESC)"):
+                        for i, box in enumerate(boxes):
+                            names = prediction[0].names
+                            conf = float(box.conf[0])
+                            cls = int(box.cls[0])
+                            label = f"{i+1}.\t Prediksi: **{names[cls]}** | Keyakinan : {conf:.2f}({(100 * conf):.0f}%)"
+                            xywh = [f"{v:.2f}" for v in box.xywh[0].tolist()]
+                            st.write(label)
+                            st.write(f"Bounding Box (xywh): {xywh}")
+                    
+                    st.session_state["has_result"]=True
                 except Exception as e:
                     st.toast(e)
             except NameError:
                 pass
-
-        # Mereset state
-        st.session_state["trigger_predict"] = False
     else:
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
 
-
-
-
-
-
+if st.session_state["has_result"]:
+    if st.button("RESET", type="primary", use_container_width=True):
+        # kosongkan status hasil
+        st.session_state["has_result"] = False
+        st.session_state["trigger_predict"] = False
+        # remount uploader agar file hilang dari UI
+        st.session_state["file_uploader_key"] += 1
+        st.rerun()
