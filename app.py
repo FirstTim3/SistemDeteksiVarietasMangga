@@ -57,7 +57,7 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
 # reset state ketika slider diubah
 def invalidate_result():
     st.session_state["has_result"] = False
-    st.session_state.trigger_predict = False
+    st.session_state["trigger_predict"] = False
 
 # Load Model
 try:
