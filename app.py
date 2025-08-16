@@ -84,6 +84,7 @@ source_img = st.file_uploader(
         type=("jpg", "jpeg", "png"),
         help="Tarik & lepas gambar di area atau klik ‘Browse files’.",
         key=st.session_state["file_uploader_key"],
+        on_change=invalidate_result
     )
 
 # Melakukan modifikasi pada tampilan file uploader
