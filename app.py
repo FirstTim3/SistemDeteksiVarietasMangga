@@ -24,9 +24,7 @@ def is_image_file_valid(src_img):
 
 # Gambar plot
 def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
-    # Convert gambar asli (BGR -> RGB)
-    img_rgb = result.orig_img[:, :, ::-1]  
-    img_pil = PIL.Image.fromarray(img_rgb)
+    img_pil = uploaded_img
     draw = PIL.ImageDraw.Draw(img_pil)
 
     # Gunakan font bawaan
