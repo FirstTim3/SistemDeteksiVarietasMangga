@@ -4,7 +4,7 @@ import numpy as np
 
 from ultralytics import YOLO
 
-# Insialisasi State
+# Inisialisasi State
 if "file_uploader_key" not in st.session_state:
     st.session_state["file_uploader_key"] = 0
 if "has_result" not in st.session_state:
@@ -56,6 +56,11 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
         draw.text((tx, ty), label, fill=text_color, font=font)
     return img_pil
 
+# reset state ketika slider diubah
+def invalidate_result():
+    st.session_state["has_result"] = False
+    st.session_state.trigger_predict = False
+
 # Load Model
 try:
     model = YOLO("best.pt")
@@ -99,11 +104,10 @@ if source_img is not None and is_image_file_valid(source_img):
     try:
         # Membuka gambar yg diunggah
         uploaded_img = PIL.Image.open(source_img)
-        img = np.array(uploaded_img.convert('RGB'))
         image_width, image_height = uploaded_img.size
 
         # Menampilkan gambar
-        st.image(source_img,
+        st.image(uploaded_img,
                     caption="Gambar yang diunggah",
                     use_container_width=True
                     )
@@ -117,56 +121,51 @@ confidence = st.slider(
     min_value=0.1,
     max_value=1.0,
     value=0.50,
-    step=0.01
+    step=0.01,
+    on_change=invalidate_result
 )
 
 if st.button("Deteksi Objek", type="primary", use_container_width=True):
-    # Menyimpan state, agar prediksi hanya dilakukan saat tombol ditekan
-    # Menghindari prediksi berulang-ulang saat slider diubah
-    st.session_state["trigger_predict"] = True
-
     # Melakukan pengecekan apakah gambar sudah diunggah
     if source_img:
-        # Melakukan pengecekan terhadap state dan menset ulang state jika belum diset
-        if st.session_state.get("trigger_predict", False):
-            # Melakukan prediksi
-            try:
-                prediction = model.predict(
-                    uploaded_img,
-                    conf=confidence
-                )
+        # Melakukan prediksi
+        try:
+            prediction = model.predict(
+                uploaded_img,
+                conf=confidence
+            )
 
-                # Mendapatkan data hasil deteksi
-                boxes = prediction[0].boxes
+            # Mendapatkan data hasil deteksi
+            boxes = prediction[0].boxes
 
-                # Membuat bounding box, label dan confidence score pada gambar
-                prediction_plotted = draw_detection(prediction[0])
-                
-                st.image(
-                    np.array(prediction_plotted),
-                    caption="Hasil Deteksi",
-                    use_container_width=True
-                )
+            # Membuat bounding box, label dan confidence score pada gambar
+            prediction_plotted = draw_detection(prediction[0])
             
-                st.write(f'Jumlah Objek terdeteksi: {len(boxes)}')
+            st.image(
+                prediction_plotted,
+                caption="Hasil Deteksi",
+                use_container_width=True
+            )
+        
+            st.write(f'Jumlah Objek terdeteksi: {len(boxes)}')
 
-                # Menampilkan detail hasil deteksi
-                try:
-                    with st.expander("Hasil Deteksi (DESC)"):
-                        for i, box in enumerate(boxes):
-                            names = prediction[0].names
-                            conf = float(box.conf[0])
-                            cls = int(box.cls[0])
-                            label = f"{i+1}.\t Prediksi: **{names[cls]}** | Keyakinan : {conf:.2f}({(100 * conf):.0f}%)"
-                            xywh = [f"{v:.2f}" for v in box.xywh[0].tolist()]
-                            st.write(label)
-                            st.write(f"Bounding Box (xywh): {xywh}")
-                    
-                    st.session_state["has_result"]=True
-                except Exception as e:
-                    st.toast(e)
-            except NameError:
-                pass
+            # Menampilkan detail hasil deteksi
+            try:
+                with st.expander("Hasil Deteksi (DESC)"):
+                    for i, box in enumerate(boxes):
+                        names = prediction[0].names
+                        conf = float(box.conf[0])
+                        cls = int(box.cls[0])
+                        label = f"{i+1}.\t Prediksi: **{names[cls]}** | Keyakinan : {conf:.2f}({(100 * conf):.0f}%)"
+                        xywh = [f"{v:.2f}" for v in box.xywh[0].tolist()]
+                        st.write(label)
+                        st.write(f"Bounding Box (xywh): {xywh}")
+                
+                st.session_state["has_result"]=True
+            except Exception as e:
+                st.toast(e)
+        except NameError:
+            pass
     else:
         st.toast("Unggah gambar terlebih dahulu!", icon="❌")
 
