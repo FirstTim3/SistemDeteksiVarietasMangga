@@ -115,7 +115,7 @@ if source_img is not None and is_image_file_valid(source_img):
         pass
 
 confidence = st.slider(
-    "Select Model Confidence",
+    "Atur Keyakinan Model",
     min_value=0.1,
     max_value=1.0,
     value=0.50,
