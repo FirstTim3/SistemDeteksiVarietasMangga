@@ -57,7 +57,6 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
 # reset state ketika slider diubah
 def invalidate_result():
     st.session_state["has_result"] = False
-    st.session_state["trigger_predict"] = False
 
 # Load Model
 try:
@@ -171,7 +170,6 @@ if st.session_state["has_result"]:
     if st.button("RESET", type="primary", use_container_width=True):
         # kosongkan status hasil
         st.session_state["has_result"] = False
-        st.session_state["trigger_predict"] = False
         # remount uploader agar file hilang dari UI
         st.session_state["file_uploader_key"] += 1
         st.rerun()
