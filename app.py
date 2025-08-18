@@ -74,8 +74,8 @@ st.set_page_config(
 st.title("Sistem Deteksi Varietas Pohon Mangga Berdasarkan Citra Daun")
 
 # Menambahkan instruksi penggunaan aplikasi
-st.info("Unggah gambar terlebih dahulu dengan memilih :blue[Browse files]")
-st.info("Lalu tekan tombol :blue[Deteksi Objek] untuk melakukan deteksi")
+st.info("Unggah gambar terlebih dahulu dengan memilih Browse files")
+st.info("Lalu tekan tombol Deteksi Objek untuk melakukan deteksi")
 st.caption("File yang didukung: JPG/JPEG/PNG (MAX 200 MB)")
 
 # Membuat form untuk mengunggah gambar
