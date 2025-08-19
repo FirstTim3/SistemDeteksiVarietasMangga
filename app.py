@@ -130,7 +130,7 @@ if st.button("Deteksi Objek", type="primary", use_container_width=True):
         try:
             prediction = model.predict(
                 uploaded_img,
-                # conf=confidence
+                conf=0.5
             )
 
             # Mendapatkan data hasil deteksi
