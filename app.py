@@ -114,14 +114,14 @@ if source_img is not None and is_image_file_valid(source_img):
     except NameError:
         pass
 
-#confidence = st.slider(
-  #  "Atur Keyakinan Model",
+# confidence = st.slider(
+#    "Atur Keyakinan Model",
 #    min_value=0.1,
-    #max_value=1.0,
- #   value=0.50,
-  #  step=0.01,
-   # on_change=invalidate_result
-#)
+#     max_value=1.0,
+#    value=0.50,
+#    step=0.01,
+#    on_change=invalidate_result
+# )
 
 if st.button("Deteksi Objek", type="primary", use_container_width=True):
     # Melakukan pengecekan apakah gambar sudah diunggah
@@ -130,7 +130,7 @@ if st.button("Deteksi Objek", type="primary", use_container_width=True):
         try:
             prediction = model.predict(
                 uploaded_img,
-                conf=confidence
+                # conf=confidence
             )
 
             # Mendapatkan data hasil deteksi
