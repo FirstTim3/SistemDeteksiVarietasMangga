@@ -149,7 +149,7 @@ if st.button("Deteksi Objek", type="primary", use_container_width=True):
 
             # Menampilkan detail hasil deteksi
             try:
-                with st.expander("Hasil Deteksi (DESC)"):
+                with st.expander("Hasil Deteksi (DESC)", extended=True):
                     for i, box in enumerate(boxes):
                         names = prediction[0].names
                         conf = float(box.conf[0])
