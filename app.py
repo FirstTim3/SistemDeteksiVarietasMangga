@@ -148,7 +148,7 @@ if st.button("Deteksi Objek", type="primary", use_container_width=True):
                         xywh = [f"{v:.2f}" for v in box.xywh[0].tolist()]
                         st.write(label)
                         st.write(f"Bounding Box (xywh): {xywh}")
-                        st.write()
+                        st.write("")
                 
                 st.session_state["has_result"]=True
             except Exception as e:
