@@ -29,8 +29,8 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
 
     # gunakan font lebih besar
     try:
-        W, H = img.size
-        font_size = max(20, W // 40)  # skala dinamis
+        width, height = img_pil.size
+        font_size = max(20, width // 40)  # skala dinamis
         font = ImageFont.truetype("DejaVuSans.ttf", size=font_size)
     except:
         font = ImageFont.load_default()
