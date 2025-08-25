@@ -30,8 +30,7 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
     # gunakan font lebih besar
     try:
         width, height = img_pil.size
-        font_size = max(20, width // 40)  # skala dinamis
-        font = PIL.ImageFont.truetype("DejaVuSans.ttf", size=font_size)
+        font = PIL.ImageFont.truetype("DejaVuSans.ttf", size=12)
     except:
         font = PIL.ImageFont.load_default()
     
