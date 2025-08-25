@@ -35,7 +35,7 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         conf = float(box.conf[0])
         cls = int(box.cls[0])
-        label = f"{names[cls]} \nKeyakinan:{conf:.2f}"
+        label = f"{names[cls]} \nKeyakinan: {conf:.2f}"
 
         # Gambar kotak
         draw.rectangle([x1, y1, x2, y2], outline=box_color, width=3)
@@ -148,7 +148,7 @@ if st.button("Deteksi Objek", type="primary", use_container_width=True):
 
             # Menampilkan detail hasil deteksi
             try:
-                with st.expander("Hasil Deteksi (DESC)", extend=True):
+                with st.expander("Hasil Deteksi (DESC)", expanded=True):
                     for i, box in enumerate(boxes):
                         names = prediction[0].names
                         conf = float(box.conf[0])
