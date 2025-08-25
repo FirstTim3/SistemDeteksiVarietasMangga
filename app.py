@@ -102,7 +102,6 @@ if source_img is not None and is_image_file_valid(source_img):
     try:
         # Membuka gambar yg diunggah
         uploaded_img = PIL.Image.open(source_img)
-        image_width, image_height = uploaded_img.size
 
         # Menampilkan gambar
         st.image(uploaded_img,
