@@ -27,14 +27,7 @@ def draw_detection(result, box_color=(0, 114, 255), text_color=(255, 255, 255)):
     img_pil = uploaded_img
     draw = PIL.ImageDraw.Draw(img_pil)
 
-    # gunakan font lebih besar
-    try:
-        width, height = img_pil.size
-        font_size = max(20, width // 40)
-        font = PIL.ImageFont.truetype("DejaVuSans.ttf", size=font_size)
-    except:
-        font = PIL.ImageFont.load_default()
-    
+    font = PIL.ImageFont.load_default()
     names = result.names
 
     for box in result.boxes:
